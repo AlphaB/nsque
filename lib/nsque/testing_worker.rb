@@ -31,7 +31,7 @@ module Nsque
     def clear_all
       count = 0
 
-      while @producer.messages_count > count
+      while !@consumer.queue.empty?
         message = @consumer.queue.pop
         @consumer.confirm(message)
 
