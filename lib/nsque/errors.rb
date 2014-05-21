@@ -3,4 +3,5 @@ module Nsque
   end
 
   class ChannelRequiredError < Error; end
+  class ProducerCantBeNilError < Error; end
 end
