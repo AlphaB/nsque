@@ -19,7 +19,6 @@ module Nsque
             klass = hash['class'].constantize
             klass.new.perform(hash['args'])
           else
-            enqueue_after = [enqueue_after.to_i, 1.hour.to_i * 1000].min #FIXME NSQ max timeout is 1 hour
             p "Requeued: #{enqueue_after} ms"
             consumer.requeue(message, enqueue_after.to_i)
             next

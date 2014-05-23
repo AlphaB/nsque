@@ -6,6 +6,7 @@ require 'nsque/producer'
 require 'nsque/worker'
 
 require 'krakow'
+require 'krakow/version'
 require 'json'
 
 module Nsque
