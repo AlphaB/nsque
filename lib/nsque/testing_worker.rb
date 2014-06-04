@@ -4,8 +4,8 @@ module Nsque
 
     def initialize(options)
       raise ChannelRequiredError.new unless options.has_key?(:channel)
-      @options = options
       raise ProducerCantBeNilError.new if options[:producer].nil?
+      @options = options
       @producer = options[:producer]
       @consumer = Krakow::Consumer.new(@options)
     end
