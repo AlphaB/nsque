@@ -10,5 +10,5 @@ Gem::Specification.new do |gem|
   gem.test_files  = `git ls-files -- test/*`.split("\n")
   gem.homepage    = 'http://rubygems.org/gems/nsque'
   gem.license     = 'MIT'
-  gem.add_dependency 'nsqrb', '~> 0.0.2'
+  gem.add_dependency 'nsqrb', '~> 0.0.3'
 end
