@@ -7,18 +7,22 @@ module Nsque
       raise ProducerCantBeNilError.new if options[:producer].nil?
       @options = options
       @producer = options[:producer]
-      @consumer = Krakow::Consumer.new(@options)
+      @consumer = Nsqrb::Consumer.new(@options)
+      @consumer.connect!
     end
 
     def process_all
       count = 0
       while @producer.messages_count > count
-        message = @consumer.queue.pop
-        hash = JSON.parse(message.message)
+        @consumer.receive
+        message = @consumer.messages.pop
+        next unless message
+        hash = JSON.parse(message.content)
         begin
           klass = hash['class'].constantize
           klass.new.perform(hash['args'])
-        rescue
+        rescue => e
+          puts e.inspect
         end
         @consumer.confirm(message)
         count += 1
@@ -30,11 +34,11 @@ module Nsque
 
     def clear_all
       count = 0
-
-      while !@consumer.queue.empty?
-        message = @consumer.queue.pop
+      while @producer.messages_count > count
+        @consumer.receive
+        message = @consumer.messages.pop
+        next unless message
         @consumer.confirm(message)
-
         count += 1
       end
 
