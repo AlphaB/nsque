@@ -12,9 +12,10 @@ module Nsque
       consumer.connect!
 
       loop do
-        Timeout::timeout(1) { consumer.receive } rescue Timeout::Error
+        consumer.receive
 
         while message = consumer.messages.pop
+          @processing_message = true
           begin
             hash = JSON.parse(message.content)
             puts hash.inspect
@@ -31,6 +32,7 @@ module Nsque
             p e.message
           end
           consumer.confirm(message)
+          @processing_message = false
         end
         break if @shutdown
       end
@@ -45,6 +47,7 @@ module Nsque
           trap(signal) do
             puts "I've recieved #{signal}!"
             @shutdown = true
+            exit unless @processing_message
           end
         end
       end
